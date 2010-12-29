@@ -1,0 +1,4 @@
+all:
+  imagecache:
+    service_class:    sfImageCacheService
+    web_path:         /sfImageCachePlugin/cached_images
