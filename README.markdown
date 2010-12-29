@@ -1,4 +1,5 @@
-= sfImageCache plugin =
+sfImageCachePlugin
+===================
 
 The `sfImageCachePlugin` is under development.  It also requires that you install the sfThumbnailPlugin
 
