@@ -7,7 +7,11 @@ function imagecache_path($source, $cacheName, $absolute = false)
   $cachePath  = sprintf('%s/%s-%s', get_imagecache_service()->getImageCacheWebDir(), $cacheName, $file);
   $webPath    = sprintf('%s/%s', sfConfig::get('app_imagecache_web_path'), basename($cachePath));
 
-  if (!is_readable($cachePath) && is_writable(dirname($cachePath)) && is_readable($sourcePath))
+  if (is_readable($cachePath)) 
+  {
+    return image_path($webPath, $absolute);
+  }
+  elseif (is_writable(dirname($cachePath)) && is_readable($sourcePath))
   {
     $dimensions = array_merge(array('width' => '', 'height' => ''), sfConfig::get('app_imagecache_'.$cacheName));
     get_imagecache_service()->createCachedImage($sourcePath, $cachePath, $dimensions['width'], $dimensions['height']);
