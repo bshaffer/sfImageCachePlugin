@@ -1,6 +1,14 @@
 sfImageCachePlugin
 ===================
 
-The `sfImageCachePlugin` is under development.  It also requires that you install the sfThumbnailPlugin
+This plugin requires that you install either `sfThumbnailPlugin` or `sfImageTransformPlugin` for image transformation. 
+`sfImageTransformPlugin` is used by default, but you can change this to `sfThumbnailPlugin` in `app.yml`
+
+    all:
+      imagecache:
+        transformer:    sfThumbnailPlugin
+        
+
+
 
 

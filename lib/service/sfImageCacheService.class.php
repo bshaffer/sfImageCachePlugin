@@ -12,8 +12,32 @@ class sfImageCacheService
   {
     $this->dispatcher = $dispatcher;
   }
-  
+
   public function createCachedImage($imagePath, $savePath, $width, $height)
+  {
+    $method = sprintf('createCachedImageWith%s', ucfirst(sfConfig::get('app_imagecache_transformer', 'sfImageTransformPlugin')));
+    return $this->$method($imagePath, $savePath, $width, $height);
+  }
+    
+  protected function createCachedImageWithSfImageTransformPlugin($imagePath, $savePath, $width, $height)
+  {
+    $orig  = new sfImage($imagePath);
+    $image = $orig->saveAs($savePath);
+
+    if (extension_loaded('gd'))
+    {
+      $crop = new sfImageResizeAndCropGD($width, $height);
+      $crop->execute($image);
+    }
+    else
+    {
+      $image->resize($width, $height);
+    }
+    
+    $image->save();
+  }
+  
+  protected function createCachedImageWithSfThumbnailPlugin($imagePath, $savePath, $width, $height)
   {
     /*
       TODO - Allow configuration of "type"
@@ -21,7 +45,7 @@ class sfImageCacheService
     if (extension_loaded('gd'))
     {
       // The "crop" method is default.
-      $adapterClass = 'sfGDAdapterCrop';
+      $adapterClass = 'sfGDAdapterResizeAndCrop';
     }
     else
     {

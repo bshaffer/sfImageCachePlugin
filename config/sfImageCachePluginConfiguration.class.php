@@ -40,6 +40,22 @@ class sfImageCachePluginConfiguration extends sfPluginConfiguration
     {
       $this->createSymlinks();
     }
+    
+    // Ensure plugins are enabled
+    $transformPlugin = sfConfig::get('app_imagecache_transformer', 'sfImageTransformPlugin');
+    
+    if (!in_array($transformPlugin, $this->configuration->getPlugins()) && substr($transformPlugin, -6) == 'Plugin') 
+    {
+      throw new sfException(sprintf('Please enabled plugin "%s" or specify a different plugin for imagecache transformation using sfConfig app_imagecache_transformorer', $transformPlugin));
+    }
+    
+    if ($transformPlugin == 'sfImageTransformPlugin') 
+    {
+      // Force autodetect
+      $settings = sfConfig::get('app_sfImageTransformPlugin_mime_type');
+      $settings['auto_detect'] = true;
+      sfConfig::set('app_sfImageTransformPlugin_mime_type', $settings);
+    }
   }
 
   /**

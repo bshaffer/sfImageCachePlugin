@@ -3,7 +3,7 @@
 /**
 * Class to allow for cropping of images to fill entire space of maxWidth and maxHeight
 */
-class sfGDAdapterCrop extends sfGDAdapter
+class sfGDAdapterResizeAndCrop extends sfGDAdapter
 {
   public function loadData($thumbnail, $image, $mime)
   {
