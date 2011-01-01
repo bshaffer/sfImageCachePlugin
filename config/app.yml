@@ -1,4 +1,5 @@
 all:
   imagecache:
+    transformer:      sfImageTransformPlugin
     service_class:    sfImageCacheService
     web_path:         /sfImageCachePlugin/cached_images
