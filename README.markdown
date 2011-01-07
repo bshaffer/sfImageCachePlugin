@@ -60,3 +60,14 @@ The `service_class` option allows you to subclass the `sfImageCacheService`
 class.
 
 The `web_path` option tells the helpers where to place the cached images.
+
+
+TODO
+----
+
+* Profiles have subfolders
+* Allow the passing of dimensions to the imagecache function (instead of profile)
+** Incorporate .htaccess in profile directory to call php script to create file
+* Allow for transform attributes - for extendibility
+
+
