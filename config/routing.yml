@@ -1,3 +1,7 @@
-imagecache_get:
+imagecache_get_profile:
   url:    /sfImageCache/:cache_name/get
+  params: { module: imagecache, action: get }
+  
+imagecache_get:
+  url:    /sfImageCache/get
   params: { module: imagecache, action: get }

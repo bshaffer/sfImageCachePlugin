@@ -18,7 +18,12 @@ function imagecache_path($source, $cacheName, $absolute = false)
     
     if (isset($options['asynchronous']) && $options['asynchronous'])
     {
-      return url_for('@imagecache_get?' . http_build_query(array('cache_name' => $cacheName, 'source' => $source)));
+      if (get_imagecache_service()->isImageCacheProfileName($cacheName)) 
+      {
+        return url_for('@imagecache_get_profile?' . http_build_query(array('cache_name' => $cacheName, 'source' => $source)));
+      }
+
+      return url_for('@imagecache_get?' . http_build_query(array('options' => $options, 'source' => $source)));
     }
     
     get_imagecache_service()->createCachedImage($sourcePath, $cachePath, $options['width'], $options['height']);

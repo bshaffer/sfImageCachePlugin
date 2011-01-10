@@ -13,7 +13,7 @@ class imagecacheActions extends sfActions
     
     $service   = get_imagecache_service();
     $source    = $request->getParameter('source');
-    $cacheName = $request->getParameter('cache_name');
+    $cacheName = $request->getParameter('cache_name', $request->getParameter('options'));
     
     $cachePath = get_imagecache_service()->getImageCacheSystemPath($source, $cacheName);
     $webPath   = sprintf('%s/%s', sfConfig::get('app_imagecache_web_path'), basename($cachePath));

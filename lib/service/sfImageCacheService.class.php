@@ -59,12 +59,64 @@ class sfImageCacheService
   
   public function getImageCacheSystemPath($source, $cacheName)
   {
-    return sprintf('%s/%s-%s', $this->getImageCacheWebDir(), $cacheName, basename($source));
+    if ($this->isImageCacheProfileName($cacheName)) 
+    {
+      return sprintf('%s/%s-%s', $this->getImageCacheWebDir(), $cacheName, basename($source));
+    }
+
+    $suffix  = array();
+    $info    = pathinfo($source);
+    $options = $this->getImageCacheOptions($cacheName);
+
+    // Unset options that do not effect the cache
+    unset($options['asynchronous']);
+    
+    // Cause who doesn't like a nice-looking filename?
+    if (isset($options['width']) && isset($options['height'])) 
+    {
+      $suffix[] = $options['width'] . 'x' . $options['height'];
+      unset($options['width'], $options['height']);
+    }
+    
+    // append addl options
+    foreach ($options as $key => $value) 
+    {
+      $suffix[] = "$key-$value";
+    }
+    
+    return sprintf('%s/%s_%s.%s', $this->getImageCacheWebDir(), $info['filename'], implode('_', $suffix), $info['extension']);
   }
   
   public function getImageCacheOptions($cacheName)
   {
-    return array_merge(array('width' => '', 'height' => ''), sfConfig::get('app_imagecache_'.$cacheName));
+    $baseOptions = array_merge(array('width' => '', 'height' => ''));
+    
+    // imagecache profile name
+    if ($this->isImageCacheProfileName($cacheName)) 
+    {
+      $options = sfConfig::get('app_imagecache_'.$cacheName);
+      
+    }
+    // array of options passed
+    elseif (is_array($cacheName)) 
+    {
+      if (isset($cacheName['cache_name'])) 
+      {
+        $options = array_merge($cacheName, sfConfig::get('app_imagecache_'.$cacheName['cache_name']));
+      }
+      else
+      {
+        $options = $cacheName;
+      }
+    }
+    // array string passed
+    elseif(!$options = sfToolkit::stringToArray($cacheName))
+    {
+      throw new sfException('Unable to parse cache options.  Please pass an imagecache profile name or imagecache options in string or array format');
+    }
+
+    // profile name passed
+    return array_merge($baseOptions, $options); 
   }
   
   public function getCacheSymlinkDir()
@@ -90,6 +142,11 @@ class sfImageCacheService
   public function getSourcePath($source)
   {
     return $this->canonicalize_path(sprintf('%s/%s', sfConfig::get('sf_web_dir'), $source)); 
+  }
+  
+  public function isImageCacheProfileName($cacheName)
+  {
+    return is_string($cacheName) && sfConfig::has('app_imagecache_'.$cacheName);
   }
   
   protected function canonicalize_path($path)
