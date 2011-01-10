@@ -44,11 +44,14 @@ Then call this profile in your views using the helper methods
     <!-- output src attribute for imagecache -->
     <img src="<?php echo imagecache_path($user['photo'], 'profile_photo) ?>" />
 
-Other options in your imagecache profile include `asynchronous`.  When set to true, a web action is called to
-render the cached image.  This is useful when you have a whole lot of cached images on a page.  Without this
-option enabled, the server will try to create all these cached images at once, and may time out.  The 
-`asynchronous` option will render the cached image if it exists, otherwise it will provide an action as the
-`src` attribute to be called to create the cached image.  Viola!  No timeout.
+Some options included in the imagecache profile are the following
+
+  * `width`: The width of the cached image.  Leave this empty if you want it to be set based on the height
+  * `height`: The height of the cached image.  Leave this empty if you want it to be set based on the width
+  * `asynchronous`:  When set to true, a web action is called to render the cached image.  This is useful 
+  when you have a whole lot of cached images on a page.  Without this option enabled, the server will try 
+  to create all these cached images at once, and may time out.  You must enable the "imagecache" module to
+  use this.
 
 Configuration
 -------------
@@ -79,5 +82,8 @@ TODO
 * Allow the passing of dimensions to the imagecache function (instead of profile)
 ** Incorporate .htaccess in profile directory to call php script to create file
 * Allow for transform attributes - for extendibility
+* Add "remote" option to pull remote images
+* Hook into cache system to allow use of cache drivers, lifetimes and sfNoCache
+* Behavior to clear cache upon image field update, generate cache using a task or on save
 
 
