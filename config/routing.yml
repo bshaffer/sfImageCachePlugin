@@ -1,0 +1,3 @@
+imagecache_get:
+  url:    /sfImageCache/:cache_name/get
+  params: { module: imagecache, action: get }

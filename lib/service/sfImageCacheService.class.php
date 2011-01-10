@@ -57,6 +57,16 @@ class sfImageCacheService
     $thumbnail->save($savePath);
   }
   
+  public function getImageCacheSystemPath($source, $cacheName)
+  {
+    return sprintf('%s/%s-%s', $this->getImageCacheWebDir(), $cacheName, basename($source));
+  }
+  
+  public function getImageCacheOptions($cacheName)
+  {
+    return array_merge(array('width' => '', 'height' => ''), sfConfig::get('app_imagecache_'.$cacheName));
+  }
+  
   public function getCacheSymlinkDir()
   {
     return sfConfig::get('sf_cache_dir').DIRECTORY_SEPARATOR.'sfImageCachePlugin';
@@ -75,5 +85,42 @@ class sfImageCacheService
   public function getImageCacheWebDir()
   {
     return $this->getWebSymlinkDir().DIRECTORY_SEPARATOR.'cached_images';
+  }
+  
+  public function getSourcePath($source)
+  {
+    return $this->canonicalize_path(sprintf('%s/%s', sfConfig::get('sf_web_dir'), $source)); 
+  }
+  
+  protected function canonicalize_path($path)
+  {
+    if (empty($path))
+    {
+      return '';
+    }
+
+    $out = array();
+    foreach (explode(DIRECTORY_SEPARATOR, $path) as $i => $fold)
+    {
+      if ('' == $fold || '.' == $fold)
+      {
+        continue;
+      }
+
+      if ('..' == $fold && $i > 0 && '..' != end($out))
+      {
+        array_pop($out);
+      }
+      else
+      {
+        $out[] = $fold;
+      }
+    }
+
+    $result  = DIRECTORY_SEPARATOR == $path[0] ? DIRECTORY_SEPARATOR : '';
+    $result .= implode(DIRECTORY_SEPARATOR, $out);
+    $result .= DIRECTORY_SEPARATOR == $path[strlen($path) - 1] ? DIRECTORY_SEPARATOR : '';
+
+    return $result;
   }
 }

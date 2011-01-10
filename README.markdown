@@ -37,8 +37,18 @@ Then call this profile in your views using the helper methods
 
     <!-- myviewSuccess.php -->
     <?php use_helper('ImageCache') ?>
+
+    <!-- output image tag for imagecache-->
     <?php echo imagecache_tag($user['photo'], 'profile_photo', array('alt' => $user->getName())) ?>
+
+    <!-- output src attribute for imagecache -->
     <img src="<?php echo imagecache_path($user['photo'], 'profile_photo) ?>" />
+
+Other options in your imagecache profile include `asynchronous`.  When set to true, a web action is called to
+render the cached image.  This is useful when you have a whole lot of cached images on a page.  Without this
+option enabled, the server will try to create all these cached images at once, and may time out.  The 
+`asynchronous` option will render the cached image if it exists, otherwise it will provide an action as the
+`src` attribute to be called to create the cached image.  Viola!  No timeout.
 
 Configuration
 -------------
