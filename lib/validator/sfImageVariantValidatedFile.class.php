@@ -9,7 +9,7 @@ abstract class sfImageVariantValidatedFile extends sfValidatedFile
   {
     if (!$this->variants) 
     {
-      throw new sfException('Please set the protected property "$variants" in the sfThumbnailValidatedFile subclass');
+      throw new sfException('Please set the protected property "$variants" in the sfImageVariantValidatedFile subclass');
     }
     
     parent::__construct($originalName, $type, $tempName, $size, $path);
